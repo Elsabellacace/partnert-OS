@@ -4,126 +4,384 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PartnerOS AI | Tu sistema para crecer</title>
+<title>Partner-OS AI | Tu sistema para crecer</title>
 
 <style>
 *{
   box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
 }
 
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#08070d;
-  color:#ffffff;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#050510;
+  color:#fff;
   line-height:1.6;
 }
 
-header{
-  min-height:85vh;
+/* NAV */
+
+nav{
+  width:100%;
+  padding:22px 6%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #201838;
+  background:rgba(5,5,16,.95);
+}
+
+.logo{
+  font-size:1.35rem;
+  font-weight:800;
+  letter-spacing:3px;
+}
+
+.logo span{
+  color:#9d4cff;
+}
+
+.menu{
+  display:flex;
+  gap:35px;
+}
+
+.menu a{
+  color:#ddd;
+  text-decoration:none;
+  font-size:.95rem;
+}
+
+.menu a:hover{
+  color:#b869ff;
+}
+
+.nav-btn{
+  padding:11px 20px;
+  border-radius:9px;
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+  background:linear-gradient(90deg,#5d27f4,#c82cdb);
+}
+
+/* HERO */
+
+.hero{
+  min-height:78vh;
+  position:relative;
+  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:60px 20px;
+  padding:80px 20px 45px;
+
   background:
-    radial-gradient(circle at top,#3b1768 0%,#120b20 35%,#08070d 70%);
+  radial-gradient(circle at 50% 30%,
+  rgba(111,32,210,.25),
+  transparent 35%),
+  linear-gradient(180deg,#070714,#050510);
 }
 
-.hero{
-  max-width:900px;
+.hero:before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  border:1px solid rgba(157,76,255,.16);
+  border-radius:50%;
+  left:-330px;
+  top:50px;
+  box-shadow:
+  30px 0 0 rgba(157,76,255,.03),
+  60px 0 0 rgba(157,76,255,.03),
+  90px 0 0 rgba(157,76,255,.03);
 }
 
-.logo{
-  font-size:1rem;
-  letter-spacing:3px;
-  color:#c69cff;
+.hero:after{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  border:1px solid rgba(194,55,255,.14);
+  border-radius:50%;
+  right:-350px;
+  bottom:20px;
+}
+
+.hero-content{
+  max-width:1000px;
+  position:relative;
+  z-index:2;
+}
+
+.eyebrow{
+  color:#9954ff;
+  font-size:.95rem;
   font-weight:bold;
+  letter-spacing:5px;
+  margin-bottom:22px;
 }
 
 h1{
-  font-size:3.3rem;
-  margin:20px 0;
+  font-size:4rem;
+  line-height:1.12;
+  margin-bottom:25px;
 }
 
 .gradient{
-  background:linear-gradient(90deg,#b36cff,#ffd86b);
+  background:linear-gradient(
+    90deg,
+    #6932ff,
+    #c64ee7,
+    #ffd05c
+  );
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-.hero p{
-  max-width:700px;
+.hero-text{
+  max-width:780px;
   margin:auto;
-  color:#d2cddd;
+  color:#c7c4d1;
   font-size:1.2rem;
 }
 
-.btn{
+.main-btn{
   display:inline-block;
-  margin-top:30px;
-  padding:15px 30px;
+  margin-top:34px;
+  padding:16px 34px;
   border-radius:10px;
-  background:linear-gradient(90deg,#8d46e8,#c57aff);
   color:white;
   text-decoration:none;
+  font-size:1.05rem;
   font-weight:bold;
+  background:linear-gradient(90deg,#5a25f5,#c82ddb);
+  box-shadow:0 0 30px rgba(127,43,255,.18);
+  transition:.2s;
 }
 
-section{
-  padding:70px 20px;
-  max-width:1100px;
-  margin:auto;
+.main-btn:hover{
+  transform:translateY(-2px);
 }
 
-h2{
-  text-align:center;
-  font-size:2.2rem;
-  margin-bottom:15px;
-}
+/* FEATURES */
 
-.subtitle{
-  text-align:center;
-  color:#aaa3b5;
-  max-width:700px;
-  margin:0 auto 40px;
+.features{
+  max-width:1250px;
+  margin:-30px auto 0;
+  padding:0 25px 80px;
+  position:relative;
+  z-index:3;
 }
 
 .cards{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
 }
 
 .card{
-  background:#12101a;
-  border:1px solid #292236;
-  border-radius:16px;
+  min-height:230px;
   padding:28px;
+  background:linear-gradient(
+    145deg,
+    rgba(17,14,38,.96),
+    rgba(7,7,20,.96)
+  );
+  border:1px solid #292044;
+  border-radius:16px;
+  transition:.25s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  border-color:#6336a0;
+}
+
+.icon{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#27104b;
+  font-size:1.8rem;
+  margin-bottom:20px;
 }
 
 .card h3{
-  color:#c790ff;
+  font-size:1.05rem;
+  margin-bottom:12px;
 }
+
+.card p{
+  color:#aaa7b5;
+  font-size:.93rem;
+}
+
+/* BENEFITS */
+
+.section{
+  max-width:1100px;
+  margin:auto;
+  padding:80px 25px;
+  text-align:center;
+}
+
+.section h2{
+  font-size:2.4rem;
+  margin-bottom:15px;
+}
+
+.section-intro{
+  max-width:720px;
+  margin:0 auto 45px;
+  color:#aaa7b5;
+}
+
+.benefits{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.benefit{
+  padding:30px;
+  background:#0d0b18;
+  border:1px solid #211a33;
+  border-radius:15px;
+}
+
+.benefit h3{
+  color:#b46bff;
+  margin-bottom:10px;
+}
+
+.benefit p{
+  color:#aaa7b5;
+}
+
+/* SECURITY */
+
+.security{
+  max-width:850px;
+  margin:0 auto 80px;
+  padding:18px 25px;
+  border:1px solid #28203d;
+  border-radius:14px;
+  background:#0b0916;
+  text-align:center;
+  color:#bcb8c8;
+}
+
+.security strong{
+  color:#9b55ff;
+}
+
+/* CTA */
 
 .cta{
+  max-width:1050px;
+  margin:0 auto 80px;
+  padding:60px 25px;
   text-align:center;
-  background:linear-gradient(135deg,#171020,#241137);
-  border:1px solid #42255e;
+  border:1px solid #32204e;
   border-radius:20px;
-  padding:50px 25px;
+  background:
+  radial-gradient(circle at center,
+  rgba(118,40,190,.18),
+  transparent 60%),
+  #0b0814;
 }
 
+.cta h2{
+  font-size:2.3rem;
+  margin-bottom:15px;
+}
+
+.cta p{
+  max-width:650px;
+  margin:auto;
+  color:#aaa7b5;
+}
+
+/* FOOTER */
+
 footer{
+  border-top:1px solid #1d172b;
+  padding:35px 20px;
   text-align:center;
-  padding:30px;
-  color:#777;
-  border-top:1px solid #1d1924;
+  color:#74707e;
+  font-size:.9rem;
+}
+
+footer strong{
+  color:#a55cff;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+  .menu{
+    display:none;
+  }
+
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .benefits{
+    grid-template-columns:1fr;
+  }
+
+  h1{
+    font-size:3rem;
+  }
 }
 
 @media(max-width:600px){
+
+  nav{
+    padding:18px 20px;
+  }
+
+  .logo{
+    font-size:1rem;
+  }
+
+  .nav-btn{
+    font-size:.8rem;
+    padding:9px 13px;
+  }
+
+  .hero{
+    padding-top:70px;
+  }
+
   h1{
-    font-size:2.4rem;
+    font-size:2.45rem;
+  }
+
+  .hero-text{
+    font-size:1rem;
+  }
+
+  .cards{
+    grid-template-columns:1fr;
+  }
+
+  .features{
+    margin:0 auto;
+    padding-top:20px;
   }
 }
 </style>
@@ -131,101 +389,214 @@ footer{
 
 <body>
 
-<header>
-  <div class="hero">
-    <div class="logo">PARTNEROS AI</div>
+<!-- NAVEGACIÓN -->
 
-    <h1>
-      Convierte oportunidades en
-      <span class="gradient">crecimiento real.</span>
-    </h1>
+<nav>
 
-    <p>
-      Una plataforma inteligente diseñada para Growth Partners,
-      emprendedores y profesionales que quieren encontrar oportunidades,
-      gestionar clientes y hacer crecer negocios desde un solo lugar.
-    </p>
+<div class="logo">
+PARTNER<span>-OS AI</span>
+</div>
 
-    <a class="btn"
-       href="https://wa.me/50493424916"
-       target="_blank">
-       Conocer PartnerOS AI
-    </a>
-  </div>
+<div class="menu">
+<a href="#inicio">Inicio</a>
+<a href="#caracteristicas">Características</a>
+<a href="#para-quien">Para quién</a>
+<a href="#beneficios">Beneficios</a>
+<a href="#contacto">Contacto</a>
+</div>
+
+<a
+class="nav-btn"
+href="https://wa.me/50493424916"
+target="_blank">
+Conocer Partner-OS AI →
+</a>
+
+</nav>
+
+
+<!-- HERO -->
+
+<header class="hero" id="inicio">
+
+<div class="hero-content">
+
+<div class="eyebrow">
+PARTNER-OS AI
+</div>
+
+<h1>
+Convierte oportunidades en
+<br>
+<span class="gradient">
+crecimiento real.
+</span>
+</h1>
+
+<p class="hero-text">
+Una plataforma inteligente diseñada para Growth Partners,
+emprendedores y profesionales que quieren encontrar oportunidades,
+gestionar clientes y hacer crecer negocios desde un solo lugar.
+</p>
+
+<a
+class="main-btn"
+href="https://wa.me/50493424916"
+target="_blank">
+Conocer Partner-OS AI &nbsp; →
+</a>
+
+</div>
+
 </header>
 
 
-<section>
+<!-- CARACTERÍSTICAS -->
 
-<h2>Tu centro de operaciones para crecer</h2>
-
-<p class="subtitle">
-PartnerOS AI combina inteligencia artificial, automatización y herramientas
-de negocio para ayudarte a trabajar con mayor velocidad y organización.
-</p>
+<section class="features" id="caracteristicas">
 
 <div class="cards">
 
 <div class="card">
-<h3>🎯 Oportunidades</h3>
+<div class="icon">🎯</div>
+<h3>Oportunidades</h3>
 <p>
-Identifica empresas, clientes y oportunidades comerciales con mayor potencial.
+Identifica empresas, clientes y oportunidades comerciales
+con mayor potencial.
 </p>
 </div>
 
 <div class="card">
-<h3>🤖 Asistencia inteligente</h3>
+<div class="icon">🧠</div>
+<h3>Asistencia inteligente</h3>
 <p>
-Utiliza IA para investigar, analizar información y preparar acciones comerciales.
+Utiliza IA para investigar, analizar información
+y preparar acciones comerciales.
 </p>
 </div>
 
 <div class="card">
-<h3>📈 Gestión de crecimiento</h3>
+<div class="icon">📈</div>
+<h3>Gestión de crecimiento</h3>
 <p>
-Organiza prospectos, clientes, tareas y estrategias desde un mismo espacio.
+Organiza prospectos, clientes, tareas y estrategias
+desde un mismo espacio.
 </p>
 </div>
 
 <div class="card">
-<h3>⚡ Automatización</h3>
+<div class="icon">⚡</div>
+<h3>Automatización</h3>
 <p>
-Reduce tareas repetitivas y dedica más tiempo a actividades que generan valor.
+Reduce tareas repetitivas y dedica más tiempo
+a actividades que generan valor.
 </p>
 </div>
 
 </div>
+
 </section>
 
 
-<section>
+<!-- PARA QUIÉN -->
 
-<div class="cta">
+<section class="section" id="para-quien">
 
-<h2>PartnerOS AI está creciendo</h2>
+<h2>Construido para quienes hacen crecer negocios</h2>
 
-<p class="subtitle">
-Estamos construyendo una nueva forma de ayudar a profesionales y
-emprendedores a convertir conocimiento, oportunidades y tecnología
-en negocios reales.
+<p class="section-intro">
+Partner-OS AI busca reunir las herramientas necesarias
+para transformar oportunidades en acciones concretas.
 </p>
 
-<a class="btn"
-   href="https://wa.me/50493424916"
-   target="_blank">
-   Solicitar información
-</a>
+<div class="benefits">
+
+<div class="benefit">
+<h3>Growth Partners</h3>
+<p>
+Investiga oportunidades, organiza prospectos y desarrolla
+estrategias para clientes.
+</p>
+</div>
+
+<div class="benefit">
+<h3>Emprendedores</h3>
+<p>
+Centraliza tareas y herramientas para administrar
+y hacer crecer tu negocio.
+</p>
+</div>
+
+<div class="benefit">
+<h3>Profesionales</h3>
+<p>
+Utiliza inteligencia artificial para trabajar con
+mayor velocidad y organización.
+</p>
+</div>
 
 </div>
+
+</section>
+
+
+<!-- BENEFICIOS -->
+
+<section class="section" id="beneficios">
+
+<h2>Menos herramientas. Más acción.</h2>
+
+<p class="section-intro">
+En lugar de saltar entre múltiples aplicaciones,
+Partner-OS AI está diseñado para ayudarte a concentrar
+tu trabajo en un mismo entorno inteligente.
+</p>
+
+</section>
+
+
+<div class="security">
+
+🔐
+<strong>Seguro · Privado · Inteligente</strong>
+&nbsp; | &nbsp;
+Tu información siempre protegida y bajo tu control.
+
+</div>
+
+
+<!-- CTA -->
+
+<section class="cta" id="contacto">
+
+<h2>Estamos construyendo Partner-OS AI</h2>
+
+<p>
+Esta es la primera etapa de una plataforma diseñada
+para ayudar a convertir conocimiento, oportunidades
+y tecnología en crecimiento real.
+</p>
+
+<a
+class="main-btn"
+href="https://wa.me/50493424916"
+target="_blank">
+Solicitar información →
+</a>
 
 </section>
 
 
 <footer>
 
-<p>© 2026 PartnerOS AI · Parte del ecosistema OpenHub-AI</p>
+<p>
+© 2026 <strong>Partner-OS AI</strong> ·
+Parte del ecosistema OpenHub-AI
+</p>
 
-<p>openhubai.contact@gmail.com</p>
+<p>
+openhubai.contact@gmail.com
+</p>
 
 </footer>
 

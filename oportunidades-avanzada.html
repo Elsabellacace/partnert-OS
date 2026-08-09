@@ -9,7 +9,7 @@
 </style>
 </head>
 <body>
-<header class="top"><div class="logo">PARTNER<span>-OS AI</span></div><a class="back" href="index.html">← Inicio</a></header>
+<header class="top"><div class="logo">PARTNER<span>-OS AI</span></div><a class="back" href="/index.html">← Inicio</a></header>
 <main class="wrap">
 <div class="eyebrow">PRIORIDADES</div>
 <h1>Oportunidades de Avanzada</h1>
@@ -17,7 +17,7 @@
 <section class="panel">
 <div id="empty" class="empty" style="display:none">Todavía no hay oportunidades guardadas. Ve al Escáner de Crecimiento, analiza un cliente y guarda la oportunidad más importante.</div>
 <div id="list" class="list"></div>
-<div class="actions"><a class="btn" href="escaner-crecimiento.html">Ir al Escáner →</a><a class="btn secondary" href="nuevo-cliente.html">+ Nuevo cliente</a></div>
+<div class="actions"><a class="btn" href="/escaner-crecimiento.html">Ir al Escáner →</a><a class="btn secondary" href="/nuevo-cliente.html">+ Nuevo cliente</a></div>
 </section>
 </main>
 <script>
@@ -42,7 +42,12 @@ function render(){
   const desc=document.createElement('p');desc.className='desc';desc.textContent=o.description||'';
   const next=document.createElement('p');next.className='next';next.innerHTML='<strong>Próxima acción:</strong> '+(o.nextAction||'Definir siguiente paso');
   const itemActions=document.createElement('div');itemActions.className='item-actions';
-  const planLink=document.createElement('a');planLink.className='btn small';planLink.href='plan-crecimiento.html?opportunity='+originalIndex;planLink.textContent='Crear plan →';itemActions.appendChild(planLink);
+  const planLink=document.createElement('a');
+  planLink.className='btn small';
+  planLink.href='/plan-crecimiento.html?opportunity='+encodeURIComponent(originalIndex);
+  planLink.textContent='Crear plan →';
+  planLink.addEventListener('click',function(e){e.preventDefault();window.location.assign(this.href);});
+  itemActions.appendChild(planLink);
   item.appendChild(head);item.appendChild(desc);item.appendChild(next);item.appendChild(itemActions);list.appendChild(item);
  });
 }

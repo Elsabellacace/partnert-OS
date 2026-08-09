@@ -9,18 +9,18 @@
 </style>
 </head>
 <body>
-<header class="top"><div class="logo">PARTNER<span>-OS AI</span></div><a class="back" href="oportunidades-avanzada.html">← Oportunidades</a></header>
+<header class="top"><div class="logo">PARTNER<span>-OS AI</span></div><a class="back" href="/oportunidades-avanzada.html">← Oportunidades</a></header>
 <main class="wrap">
 <div class="eyebrow">SIGUIENTE MOVIMIENTO</div>
 <h1>Plan de Crecimiento</h1>
-<p class="intro">Convierte una oportunidad prioritaria en un plan simple: objetivo, primer movimiento y tres pasos claros para empezar a ejecutar.</p>
+<p class="intro">Convierte una oportunidad prioritaria en un plan simple y específico para empezar a ejecutar.</p>
 <section class="panel">
 <div id="empty" class="empty" style="display:none">No hay una oportunidad seleccionada. Vuelve a Oportunidades de Avanzada y elige “Crear plan”.</div>
 <div id="plan" class="plan">
 <div class="head"><div><h2 id="title"></h2><div class="meta" id="meta"></div></div><span class="badge" id="priority"></span></div>
 <div class="goal"><strong>Objetivo:</strong> <span id="objective"></span></div>
 <div class="steps" id="steps"></div>
-<div class="actions"><button id="saveBtn" type="button">Guardar plan →</button><a class="btn secondary" href="oportunidades-avanzada.html">Volver a oportunidades</a></div>
+<div class="actions"><button id="saveBtn" type="button">Guardar plan →</button><a class="btn secondary" href="/oportunidades-avanzada.html">Volver a oportunidades</a></div>
 <p class="done" id="done">✓ Plan guardado en este dispositivo.</p>
 </div>
 </section>
@@ -29,18 +29,44 @@
 const params=new URLSearchParams(location.search);const idx=Number(params.get('opportunity'));
 let opportunities=[];try{opportunities=JSON.parse(localStorage.getItem('partnerOSOpportunities')||'[]');if(!Array.isArray(opportunities))opportunities=[];}catch(e){opportunities=[];}
 const o=Number.isInteger(idx)?opportunities[idx]:null;const plan=document.getElementById('plan');const empty=document.getElementById('empty');
+function buildSteps(opportunity){
+ const text=((opportunity.title||'')+' '+(opportunity.description||'')+' '+(opportunity.nextAction||'')).toLowerCase();
+ const first=opportunity.nextAction||'Definir el primer movimiento concreto para esta oportunidad.';
+ if(text.includes('captación')||text.includes('prospect')||text.includes('cliente')||text.includes('venta')||text.includes('seguimiento')){
+  return[
+   {t:'Activar la captación',d:first},
+   {t:'Medir conversaciones',d:'Registrar prospectos contactados, conversaciones iniciadas y ventas logradas para saber dónde se pierde el avance.'},
+   {t:'Mejorar lo que convierte',d:'Revisar qué mensaje, oferta o canal produjo mejores respuestas y concentrar el siguiente esfuerzo allí.'}
+  ];
+ }
+ if(text.includes('contenido')||text.includes('instagram')||text.includes('facebook')||text.includes('redes')||text.includes('llamada a la acción')){
+  return[
+   {t:'Definir una llamada a la acción',d:first},
+   {t:'Probarla en contenido real',d:'Publicar con una sola acción clara para que sea fácil medir qué contenido genera conversaciones.'},
+   {t:'Medir respuesta',d:'Comparar alcance, conversaciones y contactos obtenidos para repetir el formato que mejor funciona.'}
+  ];
+ }
+ if(text.includes('cliente ideal')||text.includes('segment')||text.includes('mensaje')||text.includes('propuesta')){
+  return[
+   {t:'Aclarar a quién se busca',d:first},
+   {t:'Ajustar el mensaje',d:'Expresar el beneficio principal para ese segmento con palabras específicas y una propuesta fácil de entender.'},
+   {t:'Validar con personas reales',d:'Probar el mensaje con prospectos y registrar respuestas, objeciones y señales de interés antes de escalar.'}
+  ];
+ }
+ return[
+  {t:'Ejecutar la prioridad',d:first},
+  {t:'Medir el cambio',d:'Elegir una métrica directamente relacionada con esta oportunidad y registrar el punto de partida.'},
+  {t:'Tomar la siguiente decisión',d:'Comparar el resultado con el punto de partida y decidir si mantener, corregir o escalar la acción.'}
+ ];
+}
 if(!o){empty.style.display='block';}else{
  plan.style.display='block';
  document.getElementById('title').textContent=o.title||'Oportunidad prioritaria';
  document.getElementById('meta').textContent=(o.clientName||'Cliente')+' · '+(o.status||'Detectada');
  document.getElementById('priority').textContent=(o.priority||'Alta').toUpperCase();
  document.getElementById('objective').textContent=o.description||o.title||'Convertir esta oportunidad en un resultado medible.';
- const steps=[
-  {t:'Empezar por la prioridad',d:o.nextAction||'Definir el primer movimiento concreto.'},
-  {t:'Medir una señal',d:'Elegir una métrica sencilla que permita saber si la acción está funcionando.'},
-  {t:'Decidir el siguiente movimiento',d:'Revisar el resultado y decidir si mantener, corregir o escalar.'}
- ];
- const box=document.getElementById('steps');steps.forEach((s,i)=>{const el=document.createElement('div');el.className='step';el.innerHTML='<div class="num">'+(i+1)+'</div><div><h3>'+s.t+'</h3><p>'+s.d+'</p></div>';box.appendChild(el);});
+ const steps=buildSteps(o);
+ const box=document.getElementById('steps');steps.forEach((s,i)=>{const el=document.createElement('div');el.className='step';const num=document.createElement('div');num.className='num';num.textContent=i+1;const body=document.createElement('div');const h=document.createElement('h3');h.textContent=s.t;const p=document.createElement('p');p.textContent=s.d;body.appendChild(h);body.appendChild(p);el.appendChild(num);el.appendChild(body);box.appendChild(el);});
  document.getElementById('saveBtn').addEventListener('click',()=>{
   let plans=[];try{plans=JSON.parse(localStorage.getItem('partnerOSPlans')||'[]');if(!Array.isArray(plans))plans=[];}catch(e){plans=[];}
   plans.push({clientName:o.clientName,title:o.title,objective:o.description,nextAction:o.nextAction,priority:o.priority,status:'Listo para ejecutar',steps,createdAt:new Date().toISOString()});

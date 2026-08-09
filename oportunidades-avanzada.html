@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oportunidades de Avanzada | Partner-OS AI</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#050510;color:#fff;line-height:1.5;min-height:100vh}.top{padding:20px 6%;border-bottom:1px solid #201838;display:flex;justify-content:space-between;align-items:center;background:#080713}.logo{font-weight:800;letter-spacing:2px}.logo span{color:#9d4cff}.back{color:#c8c4d2;text-decoration:none;font-size:.95rem}.wrap{max-width:980px;margin:0 auto;padding:55px 22px}.eyebrow{color:#9d4cff;font-weight:bold;letter-spacing:3px;font-size:.8rem;margin-bottom:10px}h1{font-size:2.5rem;margin-bottom:10px}.intro{color:#aaa7b5;margin-bottom:30px;max-width:760px}.panel{background:linear-gradient(145deg,#100d22,#080713);border:1px solid #292044;border-radius:18px;padding:28px;margin-bottom:24px}.empty{padding:20px;border:1px dashed #3b2d56;border-radius:12px;color:#b8b3c3}.list{display:grid;gap:14px}.item{background:#0b0917;border:1px solid #292044;border-radius:15px;padding:20px}.head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.item h3{font-size:1.05rem;margin-bottom:6px}.meta{color:#8f8a99;font-size:.84rem}.desc{color:#c1bdca;margin-top:12px}.next{margin-top:14px;color:#e1d8ee}.badge{white-space:nowrap;padding:7px 11px;border-radius:999px;background:#241143;color:#cda5ff;font-size:.76rem;font-weight:bold}.actions{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}.btn{display:inline-block;border-radius:10px;padding:13px 20px;color:#fff;text-decoration:none;font-weight:bold;background:linear-gradient(90deg,#5a25f5,#c82ddb)}.secondary{background:#171225;border:1px solid #33274d}@media(max-width:650px){.head{flex-direction:column}.panel{padding:22px}h1{font-size:2rem}.top{padding:18px 20px}}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#050510;color:#fff;line-height:1.5;min-height:100vh}.top{padding:20px 6%;border-bottom:1px solid #201838;display:flex;justify-content:space-between;align-items:center;background:#080713}.logo{font-weight:800;letter-spacing:2px}.logo span{color:#9d4cff}.back{color:#c8c4d2;text-decoration:none;font-size:.95rem}.wrap{max-width:980px;margin:0 auto;padding:55px 22px}.eyebrow{color:#9d4cff;font-weight:bold;letter-spacing:3px;font-size:.8rem;margin-bottom:10px}h1{font-size:2.5rem;margin-bottom:10px}.intro{color:#aaa7b5;margin-bottom:30px;max-width:760px}.panel{background:linear-gradient(145deg,#100d22,#080713);border:1px solid #292044;border-radius:18px;padding:28px;margin-bottom:24px}.empty{padding:20px;border:1px dashed #3b2d56;border-radius:12px;color:#b8b3c3}.list{display:grid;gap:14px}.item{background:#0b0917;border:1px solid #292044;border-radius:15px;padding:20px}.head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.item h3{font-size:1.05rem;margin-bottom:6px}.meta{color:#8f8a99;font-size:.84rem}.desc{color:#c1bdca;margin-top:12px}.next{margin-top:14px;color:#e1d8ee}.badge{white-space:nowrap;padding:7px 11px;border-radius:999px;background:#241143;color:#cda5ff;font-size:.76rem;font-weight:bold}.item-actions{margin-top:16px}.actions{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}.btn{display:inline-block;border-radius:10px;padding:13px 20px;color:#fff;text-decoration:none;font-weight:bold;background:linear-gradient(90deg,#5a25f5,#c82ddb)}.small{padding:10px 15px;font-size:.88rem}.secondary{background:#171225;border:1px solid #33274d}@media(max-width:650px){.head{flex-direction:column}.panel{padding:22px}h1{font-size:2rem}.top{padding:18px 20px}}
 </style>
 </head>
 <body>
@@ -29,7 +29,8 @@ function render(){
  list.innerHTML='';
  if(!opportunities.length){empty.style.display='block';return;}
  empty.style.display='none';
- opportunities.slice().reverse().forEach(o=>{
+ opportunities.slice().reverse().forEach((o,reverseIndex)=>{
+  const originalIndex=opportunities.length-1-reverseIndex;
   const item=document.createElement('article');item.className='item';
   const head=document.createElement('div');head.className='head';
   const left=document.createElement('div');
@@ -40,7 +41,9 @@ function render(){
   head.appendChild(left);head.appendChild(badge);
   const desc=document.createElement('p');desc.className='desc';desc.textContent=o.description||'';
   const next=document.createElement('p');next.className='next';next.innerHTML='<strong>Próxima acción:</strong> '+(o.nextAction||'Definir siguiente paso');
-  item.appendChild(head);item.appendChild(desc);item.appendChild(next);list.appendChild(item);
+  const itemActions=document.createElement('div');itemActions.className='item-actions';
+  const planLink=document.createElement('a');planLink.className='btn small';planLink.href='plan-crecimiento.html?opportunity='+originalIndex;planLink.textContent='Crear plan →';itemActions.appendChild(planLink);
+  item.appendChild(head);item.appendChild(desc);item.appendChild(next);item.appendChild(itemActions);list.appendChild(item);
  });
 }
 render();

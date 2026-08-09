@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuevo cliente | Partner-OS AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#050510;color:#fff;line-height:1.5;min-height:100vh}.top{padding:20px 6%;border-bottom:1px solid #201838;display:flex;justify-content:space-between;align-items:center;background:#080713}.logo{font-weight:800;letter-spacing:2px}.logo span{color:#9d4cff}.back{color:#c8c4d2;text-decoration:none;font-size:.95rem}.wrap{max-width:820px;margin:0 auto;padding:55px 22px}.eyebrow{color:#9d4cff;font-weight:bold;letter-spacing:3px;font-size:.8rem;margin-bottom:10px}h1{font-size:2.4rem;margin-bottom:10px}.intro{color:#aaa7b5;margin-bottom:32px;max-width:650px}.panel{background:linear-gradient(145deg,#100d22,#080713);border:1px solid #292044;border-radius:18px;padding:30px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.field{display:flex;flex-direction:column;gap:8px}.full{grid-column:1/-1}label{font-size:.9rem;font-weight:bold;color:#ddd}input,textarea{width:100%;border:1px solid #33274d;background:#090815;color:#fff;border-radius:10px;padding:13px 14px;font:inherit;outline:none}input:focus,textarea:focus{border-color:#8d49ed;box-shadow:0 0 0 3px rgba(141,73,237,.12)}textarea{min-height:90px;resize:vertical}.hint{font-size:.78rem;color:#777382}.actions{margin-top:28px;display:flex;align-items:center;gap:15px;flex-wrap:wrap}button{border:0;border-radius:10px;padding:14px 25px;color:#fff;font-weight:bold;font-size:1rem;cursor:pointer;background:linear-gradient(90deg,#5a25f5,#c82ddb)}button:hover{filter:brightness(1.08)}#status{font-size:.9rem;color:#aaa7b5}.saved{margin-top:25px;padding:18px;border:1px solid #2e2445;border-radius:12px;background:#0a0815;display:none}.saved strong{color:#b46bff}.saved p{color:#bbb7c5;margin-top:6px}@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.panel{padding:22px}h1{font-size:2rem}.top{padding:18px 20px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="logo">PARTNER<span>-OS AI</span></div><a class="back" href="index.html">← Volver</a></header>
+<main class="wrap">
+<div class="eyebrow">PRIMER PASO</div>
+<h1>Nuevo cliente</h1>
+<p class="intro">Cuéntanos lo esencial del negocio. Partner-OS usará este contexto más adelante para iniciar su análisis sin obligarte a llenar formularios interminables.</p>
+<form class="panel" id="clientForm">
+<div class="grid">
+<div class="field"><label for="name">Nombre del negocio *</label><input id="name" name="name" required placeholder="Ej. Café Central"></div>
+<div class="field"><label for="market">Mercado o ubicación *</label><input id="market" name="market" required placeholder="Ej. San Pedro Sula / Honduras / Global"></div>
+<div class="field full"><label for="offer">¿Qué vende? *</label><textarea id="offer" name="offer" required placeholder="Describe brevemente sus productos o servicios"></textarea></div>
+<div class="field"><label for="customer">Cliente ideal *</label><input id="customer" name="customer" required placeholder="¿Quién suele comprar o debería comprar?"></div>
+<div class="field"><label for="goal">Objetivo principal *</label><input id="goal" name="goal" required placeholder="Ej. conseguir más clientes"></div>
+<div class="field full"><label for="links">Web o redes</label><input id="links" name="links" placeholder="Sitio web, Instagram, Facebook..."><span class="hint">Opcional. Puedes añadirlos después.</span></div>
+</div>
+<div class="actions"><button type="submit">Guardar cliente →</button><span id="status">Los campos con * son obligatorios.</span></div>
+<div class="saved" id="saved"><strong>✓ Cliente guardado en este dispositivo</strong><p id="savedText"></p></div>
+</form>
+</main>
+<script>
+const form=document.getElementById('clientForm');
+const saved=document.getElementById('saved');
+const savedText=document.getElementById('savedText');
+const status=document.getElementById('status');
+form.addEventListener('submit',function(e){
+ e.preventDefault();
+ if(!form.reportValidity()) return;
+ const client={name:form.name.value.trim(),market:form.market.value.trim(),offer:form.offer.value.trim(),customer:form.customer.value.trim(),goal:form.goal.value.trim(),links:form.links.value.trim(),createdAt:new Date().toISOString()};
+ try{
+  const clients=JSON.parse(localStorage.getItem('partnerOSClients')||'[]');
+  clients.push(client);
+  localStorage.setItem('partnerOSClients',JSON.stringify(clients));
+  savedText.textContent=client.name+' · '+client.market+' · Objetivo: '+client.goal;
+  saved.style.display='block';
+  status.textContent='Guardado correctamente.';
+ }catch(err){status.textContent='No se pudo guardar en este navegador.';}
+});
+</script>
+</body>
+</html>

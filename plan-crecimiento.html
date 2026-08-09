@@ -29,8 +29,16 @@
 const params=new URLSearchParams(location.search);const idx=Number(params.get('opportunity'));
 let opportunities=[];try{opportunities=JSON.parse(localStorage.getItem('partnerOSOpportunities')||'[]');if(!Array.isArray(opportunities))opportunities=[];}catch(e){opportunities=[];}
 const o=Number.isInteger(idx)?opportunities[idx]:null;const plan=document.getElementById('plan');const empty=document.getElementById('empty');
+function opportunityText(opportunity){return ((opportunity.title||'')+' '+(opportunity.description||'')+' '+(opportunity.nextAction||'')).toLowerCase();}
+function buildObjective(opportunity){
+ const text=opportunityText(opportunity);
+ if(text.includes('captación')||text.includes('prospect')||text.includes('cliente')||text.includes('venta')||text.includes('seguimiento')) return 'Aumentar conversaciones comerciales calificadas y convertirlas en ventas mediante un flujo simple de captación y seguimiento.';
+ if(text.includes('contenido')||text.includes('instagram')||text.includes('facebook')||text.includes('redes')||text.includes('llamada a la acción')) return 'Convertir el contenido y los canales sociales en conversaciones medibles con prospectos mediante una llamada a la acción clara.';
+ if(text.includes('cliente ideal')||text.includes('segment')||text.includes('mensaje')||text.includes('propuesta')) return 'Definir mejor el cliente ideal y ajustar el mensaje para aumentar la respuesta y la intención de compra.';
+ return opportunity.title||'Convertir esta oportunidad en un resultado medible y accionable.';
+}
 function buildSteps(opportunity){
- const text=((opportunity.title||'')+' '+(opportunity.description||'')+' '+(opportunity.nextAction||'')).toLowerCase();
+ const text=opportunityText(opportunity);
  const first=opportunity.nextAction||'Definir el primer movimiento concreto para esta oportunidad.';
  if(text.includes('captación')||text.includes('prospect')||text.includes('cliente')||text.includes('venta')||text.includes('seguimiento')){
   return[
@@ -64,12 +72,13 @@ if(!o){empty.style.display='block';}else{
  document.getElementById('title').textContent=o.title||'Oportunidad prioritaria';
  document.getElementById('meta').textContent=(o.clientName||'Cliente')+' · '+(o.status||'Detectada');
  document.getElementById('priority').textContent=(o.priority||'Alta').toUpperCase();
- document.getElementById('objective').textContent=o.description||o.title||'Convertir esta oportunidad en un resultado medible.';
+ const objective=buildObjective(o);
+ document.getElementById('objective').textContent=objective;
  const steps=buildSteps(o);
  const box=document.getElementById('steps');steps.forEach((s,i)=>{const el=document.createElement('div');el.className='step';const num=document.createElement('div');num.className='num';num.textContent=i+1;const body=document.createElement('div');const h=document.createElement('h3');h.textContent=s.t;const p=document.createElement('p');p.textContent=s.d;body.appendChild(h);body.appendChild(p);el.appendChild(num);el.appendChild(body);box.appendChild(el);});
  document.getElementById('saveBtn').addEventListener('click',()=>{
   let plans=[];try{plans=JSON.parse(localStorage.getItem('partnerOSPlans')||'[]');if(!Array.isArray(plans))plans=[];}catch(e){plans=[];}
-  plans.push({clientName:o.clientName,title:o.title,objective:o.description,nextAction:o.nextAction,priority:o.priority,status:'Listo para ejecutar',steps,createdAt:new Date().toISOString()});
+  plans.push({clientName:o.clientName,title:o.title,objective,nextAction:o.nextAction,priority:o.priority,status:'Listo para ejecutar',steps,createdAt:new Date().toISOString()});
   localStorage.setItem('partnerOSPlans',JSON.stringify(plans));document.getElementById('done').style.display='block';
  });
 }

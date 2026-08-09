@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resultado | Partner-OS AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#050510;color:#fff;line-height:1.5;min-height:100vh}.top{padding:20px 6%;border-bottom:1px solid #201838;display:flex;justify-content:space-between;align-items:center;background:#080713}.logo{font-weight:800;letter-spacing:2px}.logo span{color:#9d4cff}.back{color:#c8c4d2;text-decoration:none}.wrap{max-width:980px;margin:0 auto;padding:55px 22px}.eyebrow{color:#9d4cff;font-weight:bold;letter-spacing:3px;font-size:.8rem;margin-bottom:10px}h1{font-size:2.5rem;margin-bottom:10px}.intro{color:#aaa7b5;margin-bottom:30px}.panel{background:linear-gradient(145deg,#100d22,#080713);border:1px solid #292044;border-radius:18px;padding:28px}.empty{padding:20px;border:1px dashed #3b2d56;border-radius:12px;color:#b8b3c3}.resultView{display:none}.head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:20px}.head h2{font-size:1.5rem}.meta{color:#8f8a99;font-size:.88rem;margin-top:4px}.badge{white-space:nowrap;padding:7px 11px;border-radius:999px;background:#241143;color:#cda5ff;font-size:.76rem;font-weight:bold}.goal{padding:18px;border:1px solid #3a2b56;border-radius:13px;background:#0b0917;margin-bottom:22px}.goal strong{color:#c997ff}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:16px}.field label{display:block;margin-bottom:7px;font-weight:bold;color:#d8d3e2}.field input,.field textarea{width:100%;border-radius:11px;border:1px solid #33274d;background:#080713;color:#fff;padding:13px}.field textarea{min-height:100px;resize:vertical}.summary{margin-top:8px;padding:18px;border:1px solid #3a2b56;border-radius:13px;background:#0b0917}.summary strong{color:#c997ff}.verdict{margin-top:10px;font-weight:bold}.actions{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}.btn,button{display:inline-block;border:0;border-radius:10px;padding:13px 20px;color:#fff;text-decoration:none;font-weight:bold;cursor:pointer;background:linear-gradient(90deg,#5a25f5,#c82ddb)}.secondary{background:#171225;border:1px solid #33274d}.saved{margin-top:16px;color:#b6f1c8;display:none}@media(max-width:650px){.grid{grid-template-columns:1fr}.head{flex-direction:column}.panel{padding:22px}h1{font-size:2rem}.top{padding:18px 20px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="logo">PARTNER<span>-OS AI</span></div><a class="back" id="backLink" href="/oportunidades-avanzada.html">← Volver</a></header>
+<main class="wrap">
+<div class="eyebrow">RESULTADO Y APRENDIZAJE</div>
+<h1>Comprobar si funcionó</h1>
+<p class="intro">Registra una métrica antes y después. Partner-OS guarda el resultado y el aprendizaje para que la siguiente decisión parta de evidencia.</p>
+<section class="panel">
+<div id="empty" class="empty" style="display:none">No hay una ejecución seleccionada. Vuelve a Ejecución y entra desde “Registrar resultado”.</div>
+<div id="resultView" class="resultView">
+<div class="head"><div><h2 id="title"></h2><div class="meta" id="meta"></div></div><span class="badge">MEDICIÓN</span></div>
+<div class="goal"><strong>Objetivo:</strong> <span id="objective"></span></div>
+<div class="field"><label for="metric">Métrica que vamos a medir</label><input id="metric" placeholder="Ej.: conversaciones calificadas, ventas, CPA, tasa de conversión"></div>
+<div class="grid">
+<div class="field"><label for="before">Antes</label><input id="before" type="number" step="any" placeholder="Ej.: 7"></div>
+<div class="field"><label for="after">Después</label><input id="after" type="number" step="any" placeholder="Ej.: 12"></div>
+</div>
+<div class="field"><label for="observed">Qué ocurrió</label><textarea id="observed" placeholder="Describe brevemente el resultado observado."></textarea></div>
+<div class="field"><label for="learning">Aprendizaje</label><textarea id="learning" placeholder="Ej.: La oferta de entrada por WhatsApp produjo más conversaciones que el formulario web."></textarea></div>
+<div class="summary"><strong>Lectura del resultado:</strong><div class="verdict" id="verdict">Completa “Antes” y “Después” para comparar.</div></div>
+<div class="actions"><button id="saveBtn" type="button">Guardar resultado →</button><a class="btn secondary" id="executionLink" href="#">Volver a ejecución</a></div>
+<p class="saved" id="saved">✓ Resultado y aprendizaje guardados en este dispositivo.</p>
+</div>
+</section>
+</main>
+<script>
+const params=new URLSearchParams(location.search);const planIndex=Number(params.get('plan'));
+let plans=[];try{plans=JSON.parse(localStorage.getItem('partnerOSPlans')||'[]');if(!Array.isArray(plans))plans=[];}catch(e){plans=[];}
+let executions=[];try{executions=JSON.parse(localStorage.getItem('partnerOSExecutions')||'[]');if(!Array.isArray(executions))executions=[];}catch(e){executions=[];}
+const p=Number.isInteger(planIndex)?plans[planIndex]:null;const ex=executions.find(x=>x.planIndex===planIndex);const empty=document.getElementById('empty');const view=document.getElementById('resultView');
+const executionUrl='/ejecucion.html?plan='+encodeURIComponent(planIndex);document.getElementById('executionLink').href=executionUrl;document.getElementById('backLink').href=executionUrl;
+function getVerdict(){const a=Number(document.getElementById('before').value),b=Number(document.getElementById('after').value);if(!Number.isFinite(a)||!Number.isFinite(b)||document.getElementById('before').value===''||document.getElementById('after').value==='')return 'Completa “Antes” y “Después” para comparar.';if(a===b)return 'Sin cambio medible frente al punto de partida.';const diff=b-a;const pct=a!==0?Math.abs(diff/a*100):null;return diff>0?'La métrica aumentó '+(pct!==null?pct.toFixed(1)+'%':'de '+a+' a '+b)+'.':'La métrica disminuyó '+(pct!==null?pct.toFixed(1)+'%':'de '+a+' a '+b)+'.';}
+function refresh(){document.getElementById('verdict').textContent=getVerdict();}
+if(!p||!ex){empty.style.display='block';}else{
+ view.style.display='block';document.getElementById('title').textContent=p.title||'Resultado del plan';document.getElementById('meta').textContent=(p.clientName||'Cliente')+' · '+(ex.status||'En ejecución');document.getElementById('objective').textContent=p.objective||'Comprobar el impacto de la acción.';
+ let results=[];try{results=JSON.parse(localStorage.getItem('partnerOSResults')||'[]');if(!Array.isArray(results))results=[];}catch(e){results=[];}
+ const existing=results.find(x=>x.planIndex===planIndex);if(existing){document.getElementById('metric').value=existing.metric||'';document.getElementById('before').value=existing.before??'';document.getElementById('after').value=existing.after??'';document.getElementById('observed').value=existing.observed||'';document.getElementById('learning').value=existing.learning||'';}else if(ex.result){document.getElementById('observed').value=ex.result;}
+ ['before','after'].forEach(id=>document.getElementById(id).addEventListener('input',refresh));refresh();
+ document.getElementById('saveBtn').addEventListener('click',()=>{const metric=document.getElementById('metric').value.trim(),before=document.getElementById('before').value,after=document.getElementById('after').value,observed=document.getElementById('observed').value.trim(),learning=document.getElementById('learning').value.trim();if(!metric||before===''||after===''){alert('Completa la métrica, el valor antes y el valor después.');return;}results=results.filter(x=>x.planIndex!==planIndex);results.push({planIndex,clientName:p.clientName,title:p.title,objective:p.objective,metric,before:Number(before),after:Number(after),observed,learning,verdict:getVerdict(),createdAt:new Date().toISOString()});localStorage.setItem('partnerOSResults',JSON.stringify(results));document.getElementById('saved').style.display='block';});
+}
+</script>
+</body>
+</html>

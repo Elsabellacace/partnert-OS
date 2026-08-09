@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escáner de Crecimiento | Partner-OS AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#050510;color:#fff;line-height:1.5;min-height:100vh}.top{padding:20px 6%;border-bottom:1px solid #201838;display:flex;justify-content:space-between;align-items:center;background:#080713}.logo{font-weight:800;letter-spacing:2px}.logo span{color:#9d4cff}.back{color:#c8c4d2;text-decoration:none;font-size:.95rem}.wrap{max-width:980px;margin:0 auto;padding:55px 22px}.eyebrow{color:#9d4cff;font-weight:bold;letter-spacing:3px;font-size:.8rem;margin-bottom:10px}h1{font-size:2.5rem;margin-bottom:10px}.intro{color:#aaa7b5;margin-bottom:30px;max-width:760px}.panel{background:linear-gradient(145deg,#100d22,#080713);border:1px solid #292044;border-radius:18px;padding:28px;margin-bottom:24px}label{display:block;font-size:.9rem;font-weight:bold;color:#ddd;margin-bottom:9px}select{width:100%;border:1px solid #33274d;background:#090815;color:#fff;border-radius:10px;padding:13px 14px;font:inherit;outline:none}select:focus{border-color:#8d49ed;box-shadow:0 0 0 3px rgba(141,73,237,.12)}button,.btn{display:inline-block;border:0;border-radius:10px;padding:14px 25px;color:#fff;text-decoration:none;font-weight:bold;font-size:1rem;cursor:pointer;background:linear-gradient(90deg,#5a25f5,#c82ddb)}button:hover,.btn:hover{filter:brightness(1.08)}.actions{margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.muted{color:#817c8d;font-size:.88rem}.empty{padding:20px;border:1px dashed #3b2d56;border-radius:12px;color:#b8b3c3}.results{display:none}.client-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:24px}.client-head h2{font-size:1.65rem}.client-meta{color:#aaa7b5;margin-top:4px}.badge{white-space:nowrap;padding:7px 11px;border-radius:999px;background:#241143;color:#cda5ff;font-size:.78rem;font-weight:bold}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.result-card{background:#0b0917;border:1px solid #292044;border-radius:15px;padding:22px}.result-card h3{font-size:1rem;margin-bottom:14px}.result-card ul{padding-left:18px;color:#bbb7c5}.result-card li{margin-bottom:10px}.problem h3{color:#ffadad}.opportunity h3{color:#b98cff}.action h3{color:#ffd36a}.next{margin-top:20px;padding:20px;border:1px solid #40305e;border-radius:14px;background:rgba(123,62,220,.08)}.next strong{color:#c997ff}.note{margin-top:18px;color:#777382;font-size:.8rem}@media(max-width:760px){.grid{grid-template-columns:1fr}.client-head{flex-direction:column}.panel{padding:22px}h1{font-size:2rem}.top{padding:18px 20px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="logo">PARTNER<span>-OS AI</span></div><a class="back" href="index.html">← Inicio</a></header>
+<main class="wrap">
+<div class="eyebrow">DIAGNÓSTICO INICIAL</div>
+<h1>Escáner de Crecimiento</h1>
+<p class="intro">Selecciona un cliente y obtén una primera lectura accionable: qué puede estar frenando su crecimiento, dónde hay oportunidades y cuál debería ser el siguiente movimiento.</p>
+<section class="panel" id="selectorPanel">
+<label for="clientSelect">Cliente</label>
+<select id="clientSelect"></select>
+<div class="actions"><button id="scanBtn" type="button">Analizar negocio →</button><a class="btn" href="nuevo-cliente.html" style="background:#171225;border:1px solid #33274d">+ Nuevo cliente</a><span class="muted" id="status"></span></div>
+<div class="empty" id="empty" style="display:none;margin-top:18px">Todavía no hay clientes guardados en este navegador. Crea uno primero para poder analizarlo.</div>
+</section>
+<section class="panel results" id="results">
+<div class="client-head"><div><h2 id="clientName"></h2><p class="client-meta" id="clientMeta"></p></div><span class="badge">ESCANEO INICIAL</span></div>
+<div class="grid">
+<article class="result-card problem"><h3>⚠️ Posibles frenos</h3><ul id="problems"></ul></article>
+<article class="result-card opportunity"><h3>🚀 Oportunidades</h3><ul id="opportunities"></ul></article>
+<article class="result-card action"><h3>🎯 Próximas acciones</h3><ul id="actionsList"></ul></article>
+</div>
+<div class="next"><strong>Prioridad recomendada:</strong> <span id="priority"></span></div>
+<p class="note">Esta primera versión usa reglas simples sobre la información guardada. No sustituye todavía un análisis con IA, datos de ventas o métricas externas.</p>
+</section>
+</main>
+<script>
+const select=document.getElementById('clientSelect');
+const scanBtn=document.getElementById('scanBtn');
+const empty=document.getElementById('empty');
+const results=document.getElementById('results');
+const status=document.getElementById('status');
+let clients=[];
+try{clients=JSON.parse(localStorage.getItem('partnerOSClients')||'[]');if(!Array.isArray(clients))clients=[];}catch(e){clients=[];}
+function loadClients(){
+ select.innerHTML='';
+ if(!clients.length){select.disabled=true;scanBtn.disabled=true;scanBtn.style.opacity='.5';empty.style.display='block';status.textContent='';return;}
+ clients.forEach((c,i)=>{const o=document.createElement('option');o.value=i;o.textContent=c.name+' · '+c.market;select.appendChild(o);});
+ status.textContent=clients.length===1?'1 cliente disponible':clients.length+' clientes disponibles';
+}
+function addItem(list,text){const li=document.createElement('li');li.textContent=text;list.appendChild(li);}
+function analyze(c){
+ const problems=[];const opportunities=[];const actions=[];
+ const goal=(c.goal||'').toLowerCase();const links=(c.links||'').trim();const offer=(c.offer||'').trim();const customer=(c.customer||'').trim();
+ if(!links) problems.push('No hay presencia digital registrada; puede estar limitando descubrimiento, confianza o seguimiento.');
+ else problems.push('La presencia digital existe, pero falta validar si convierte visitas en conversaciones y ventas.');
+ if(offer.length<45) problems.push('La propuesta de valor está descrita de forma muy general; puede ser difícil diferenciarla frente a alternativas.');
+ else problems.push('La oferta necesita comprobar qué beneficio específico genera mayor respuesta en el cliente ideal.');
+ if(customer.length<30) problems.push('El cliente ideal aún está poco definido; eso puede dispersar mensajes, canales y prospección.');
+ else problems.push('Hay una hipótesis de cliente ideal, pero falta validar qué segmento compra más rápido o deja mayor margen.');
+ if(goal.includes('cliente')||goal.includes('venta')){opportunities.push('Construir un flujo simple de captación → contacto → seguimiento enfocado en aumentar conversaciones comerciales.');actions.push('Definir una oferta de entrada y un canal principal para conseguir prospectos esta semana.');}
+ else if(goal.includes('red')||goal.includes('instagram')||goal.includes('facebook')||goal.includes('contenido')){opportunities.push('Convertir contenido y redes en un sistema de captación con llamada a la acción y seguimiento medible.');actions.push('Elegir una llamada a la acción única y medir cuántas conversaciones genera.');}
+ else{opportunities.push('Traducir el objetivo principal en una métrica concreta para poder priorizar acciones y medir avance.');actions.push('Convertir “'+(c.goal||'crecer')+'” en una meta con número y plazo.');}
+ opportunities.push('Usar el conocimiento del cliente ideal para crear mensajes y propuestas más específicos.');
+ opportunities.push('Registrar resultados por acción para identificar qué mantener, corregir o escalar.');
+ actions.push('Hablar con 3–5 clientes o prospectos para validar por qué compran, qué objeciones tienen y qué valoran más.');
+ actions.push('Registrar una métrica base antes de ejecutar cambios: prospectos, conversaciones, ventas o conversión.');
+ return{problems,opportunities,actions,priority:actions[0]};
+}
+scanBtn.addEventListener('click',()=>{
+ const c=clients[Number(select.value)];if(!c)return;
+ const r=analyze(c);
+ document.getElementById('clientName').textContent=c.name;
+ document.getElementById('clientMeta').textContent=c.market+' · Objetivo: '+c.goal;
+ ['problems','opportunities','actionsList'].forEach(id=>document.getElementById(id).innerHTML='');
+ r.problems.forEach(x=>addItem(document.getElementById('problems'),x));
+ r.opportunities.forEach(x=>addItem(document.getElementById('opportunities'),x));
+ r.actions.forEach(x=>addItem(document.getElementById('actionsList'),x));
+ document.getElementById('priority').textContent=r.priority;
+ results.style.display='block';results.scrollIntoView({behavior:'smooth',block:'start'});
+ const scans=JSON.parse(localStorage.getItem('partnerOSScans')||'[]');scans.push({clientName:c.name,createdAt:new Date().toISOString(),result:r});localStorage.setItem('partnerOSScans',JSON.stringify(scans));
+});
+loadClients();
+</script>
+</body>
+</html>

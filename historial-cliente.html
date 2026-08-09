@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historial del cliente | Partner-OS AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#050510;color:#fff;line-height:1.5;min-height:100vh}.top{padding:20px 6%;border-bottom:1px solid #201838;display:flex;justify-content:space-between;align-items:center;background:#080713}.logo{font-weight:800;letter-spacing:2px}.logo span{color:#9d4cff}.back{color:#c8c4d2;text-decoration:none}.wrap{max-width:1040px;margin:0 auto;padding:55px 22px}.eyebrow{color:#9d4cff;font-weight:bold;letter-spacing:3px;font-size:.8rem;margin-bottom:10px}h1{font-size:2.5rem;margin-bottom:10px}.intro{color:#aaa7b5;margin-bottom:28px}.panel{background:linear-gradient(145deg,#100d22,#080713);border:1px solid #292044;border-radius:18px;padding:28px}.selector{margin-bottom:24px}.selector label{display:block;font-weight:bold;margin-bottom:8px}.selector select{width:100%;padding:13px;border-radius:11px;border:1px solid #33274d;background:#080713;color:#fff}.empty{padding:20px;border:1px dashed #3b2d56;border-radius:12px;color:#b8b3c3}.timeline{display:grid;gap:16px}.card{border:1px solid #2f2447;border-radius:15px;padding:20px;background:#0a0815}.cardHead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:14px}.card h2{font-size:1.12rem}.meta{color:#8f8a99;font-size:.85rem;margin-top:4px}.badge{padding:6px 10px;border-radius:999px;background:#241143;color:#d3b2ff;font-size:.74rem;font-weight:bold;white-space:nowrap}.row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.item{padding:13px;border:1px solid #281f3d;border-radius:11px;background:#080713}.item b{display:block;color:#c997ff;margin-bottom:4px;font-size:.82rem}.item p{color:#d4d0dc;font-size:.9rem}.decision{border-color:#315d45;background:#0a130e}.decision .badge{background:#173725;color:#b6f1c8}.actions{margin-top:22px}.btn{display:inline-block;border-radius:10px;padding:12px 18px;color:#fff;text-decoration:none;font-weight:bold;background:linear-gradient(90deg,#5a25f5,#c82ddb)}@media(max-width:650px){.row{grid-template-columns:1fr}.cardHead{flex-direction:column}.panel{padding:22px}h1{font-size:2rem}.top{padding:18px 20px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="logo">PARTNER<span>-OS AI</span></div><a class="back" href="/oportunidades-avanzada.html">← Oportunidades</a></header>
+<main class="wrap">
+<div class="eyebrow">MEMORIA DEL CLIENTE</div>
+<h1>Historial de pruebas y decisiones</h1>
+<p class="intro">Reúne qué se probó, qué resultado produjo, qué se aprendió y qué decisión se tomó. Esta será la base de la memoria operativa del cliente.</p>
+<section class="panel">
+<div class="selector"><label for="clientSelect">Cliente</label><select id="clientSelect"></select></div>
+<div id="empty" class="empty" style="display:none">Todavía no hay resultados y decisiones guardados para este cliente.</div>
+<div id="timeline" class="timeline"></div>
+<div class="actions"><a class="btn" href="/escaner-crecimiento.html">Nueva prueba desde el Escáner →</a></div>
+</section>
+</main>
+<script>
+function read(key){try{const v=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}}
+const clients=read('partnerOSClients'),plans=read('partnerOSPlans'),executions=read('partnerOSExecutions'),results=read('partnerOSResults'),decisions=read('partnerOSDecisions');
+const select=document.getElementById('clientSelect'),timeline=document.getElementById('timeline'),empty=document.getElementById('empty');
+const names=[...new Set([...clients.map(x=>x.name),...plans.map(x=>x.clientName),...results.map(x=>x.clientName),...decisions.map(x=>x.clientName)].filter(Boolean))];
+if(!names.length){const o=document.createElement('option');o.textContent='Sin clientes';select.appendChild(o);select.disabled=true;empty.style.display='block';}
+else{names.forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;select.appendChild(o)});const q=new URLSearchParams(location.search).get('client');if(q&&names.includes(q))select.value=q;render();select.addEventListener('change',render)}
+function fmtDate(v){if(!v)return'';const d=new Date(v);return Number.isNaN(d.getTime())?'':d.toLocaleDateString('es-HN',{year:'numeric',month:'short',day:'numeric'})}
+function addItem(parent,label,text){const div=document.createElement('div');div.className='item';const b=document.createElement('b');b.textContent=label;const p=document.createElement('p');p.textContent=text||'Sin registro';div.appendChild(b);div.appendChild(p);parent.appendChild(div)}
+function render(){timeline.innerHTML='';const name=select.value;const clientPlans=plans.map((p,i)=>({p,i})).filter(x=>x.p.clientName===name);if(!clientPlans.length){empty.style.display='block';return}empty.style.display='none';clientPlans.slice().reverse().forEach(({p,i})=>{const ex=executions.find(x=>x.planIndex===i),r=results.find(x=>x.planIndex===i),d=decisions.find(x=>x.planIndex===i);const card=document.createElement('article');card.className='card'+(d?' decision':'');const head=document.createElement('div');head.className='cardHead';const left=document.createElement('div');const h=document.createElement('h2');h.textContent=p.title||'Plan de crecimiento';const meta=document.createElement('div');meta.className='meta';meta.textContent=fmtDate((d&&d.createdAt)||(r&&r.createdAt)||(ex&&ex.updatedAt)||p.createdAt);left.appendChild(h);left.appendChild(meta);const badge=document.createElement('span');badge.className='badge';badge.textContent=d?d.decision:(r?'RESULTADO':(ex?ex.status||'EN EJECUCIÓN':'PLAN'));head.appendChild(left);head.appendChild(badge);card.appendChild(head);const row=document.createElement('div');row.className='row';addItem(row,'Objetivo',p.objective);addItem(row,'Resultado',r?r.verdict:(ex&&ex.result)||'Aún sin medición');addItem(row,'Aprendizaje',r&&r.learning);addItem(row,'Decisión',d?d.decision+(d.reason?' — '+d.reason:''):'Pendiente');card.appendChild(row);timeline.appendChild(card)});}
+</script>
+</body>
+</html>
